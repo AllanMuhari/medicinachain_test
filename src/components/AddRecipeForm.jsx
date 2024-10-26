@@ -7,6 +7,7 @@ import {
   TextField,
   Button,
   Box,
+  Typography,
 } from "@mui/material";
 
 function AddRecipeForm({ open, onClose, onAdd }) {
@@ -32,14 +33,20 @@ function AddRecipeForm({ open, onClose, onAdd }) {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <form onSubmit={handleSubmit}>
-        <DialogTitle>Add New Recipe</DialogTitle>
+        <DialogTitle>
+          <Typography variant="h5" color="primary" align="center">
+            Add New Recipe
+          </Typography>
+        </DialogTitle>
         <DialogContent>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, pt: 2 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 3, pt: 2 }}>
             <TextField
               label="Recipe Name"
               value={recipe.name}
               onChange={(e) => setRecipe({ ...recipe, name: e.target.value })}
               required
+              fullWidth
+              variant="outlined"
             />
             <TextField
               label="Description"
@@ -48,6 +55,10 @@ function AddRecipeForm({ open, onClose, onAdd }) {
                 setRecipe({ ...recipe, description: e.target.value })
               }
               required
+              fullWidth
+              variant="outlined"
+              multiline
+              rows={2}
             />
             <TextField
               label="Ingredients (comma-separated)"
@@ -56,6 +67,8 @@ function AddRecipeForm({ open, onClose, onAdd }) {
                 setRecipe({ ...recipe, ingredients: e.target.value })
               }
               required
+              fullWidth
+              variant="outlined"
               multiline
               rows={3}
             />
@@ -66,14 +79,18 @@ function AddRecipeForm({ open, onClose, onAdd }) {
                 setRecipe({ ...recipe, instructions: e.target.value })
               }
               required
+              fullWidth
+              variant="outlined"
               multiline
               rows={4}
             />
           </Box>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose}>Cancel</Button>
-          <Button type="submit" variant="contained">
+        <DialogActions sx={{ justifyContent: "center", gap: 2, p: 2 }}>
+          <Button onClick={onClose} variant="outlined" color="error">
+            Cancel
+          </Button>
+          <Button type="submit" variant="contained" color="primary">
             Add Recipe
           </Button>
         </DialogActions>
