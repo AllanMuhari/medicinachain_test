@@ -5,15 +5,14 @@ export default defineConfig({
   plugins: [react()],
   build: {
     outDir: "dist",
-    assetsDir: "assets",
+    rollupOptions: {
+      external: [],
+      output: {
+        manualChunks: undefined,
+      },
+    },
   },
-  base: "./", 
-  server: {
-    port: 3000,
-    strictPort: true,
-    host: true,
-  },
-  resolve: {
-    extensions: [".js", ".jsx", ".json"],
+  optimizeDeps: {
+    exclude: ["@rollup/rollup-linux-x64-gnu"],
   },
 });
