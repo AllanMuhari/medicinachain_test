@@ -23,7 +23,7 @@ import RecipeDetails from "./components/RecipeDetails";
 const initialRecipes = [
   {
     id: 1,
-    name: "Spaghetti Carbonara",
+    name: "Classic Spaghetti Carbonara",
     description: "A traditional Italian pasta dish",
     ingredients: [
       "spaghetti",
@@ -105,7 +105,6 @@ function App() {
         severity: "success",
       });
       setSelectedRecipe(null);
-      setRecipeToDelete(null);
     }
     setOpenDeleteDialog(false);
   };
@@ -127,7 +126,16 @@ function App() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ mb: 4 }}>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{
+              flexGrow: 1,
+              fontSize: {
+                xs: "1.1rem",
+                sm: "1.25rem",
+              },
+            }}>
             Recipe Book
           </Typography>
           <Button color="inherit" onClick={() => setOpenAddForm(true)}>
@@ -185,16 +193,15 @@ function App() {
           <DialogTitle>Confirm Deletion</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Are you sure you want to delete{" "}
-              {recipeToDelete ? recipeToDelete.name : ""}? This action cannot be
-              undone.
+              Are you sure you want to delete {recipeToDelete?.name}? This
+              action cannot be undone.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setOpenDeleteDialog(false)} color="primary">
               Cancel
             </Button>
-            <Button onClick={confirmDeleteRecipe} color="secondary">
+            <Button onClick={confirmDeleteRecipe} color="error">
               Delete
             </Button>
           </DialogActions>

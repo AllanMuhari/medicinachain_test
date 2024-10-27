@@ -78,13 +78,7 @@ function RecipeList({
                   <IconButton
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (
-                        window.confirm(
-                          "Are you sure you want to delete this recipe?"
-                        )
-                      ) {
-                        onDeleteRecipe(recipe.id);
-                      }
+                      onDeleteRecipe(recipe.id);
                     }}>
                     <DeleteIcon />
                   </IconButton>
@@ -102,15 +96,51 @@ function RecipeList({
                   flexDirection: "column",
                   alignItems: "flex-start",
                   p: 2,
+                  width: "100%",
+                  "& .MuiListItemText-root": {
+                    width: "100%",
+                    mr: { xs: 8, sm: 12 },
+                  },
                 }}>
                 <ListItemText
                   primary={
-                    <Typography variant="h6" color="text.primary">
+                    <Typography
+                      variant="h6"
+                      color="text.primary"
+                      sx={{
+                        fontSize: {
+                          xs: "0.9rem",
+                          sm: "1.1rem",
+                        },
+                        fontWeight: 500,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        width: {
+                          xs: "180px",
+                          sm: "300px",
+                        },
+                      }}>
                       {recipe.name}
                     </Typography>
                   }
                   secondary={
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{
+                        fontSize: {
+                          xs: "0.8rem",
+                          sm: "0.875rem",
+                        },
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        width: {
+                          xs: "180px",
+                          sm: "300px",
+                        },
+                      }}>
                       {recipe.description}
                     </Typography>
                   }
