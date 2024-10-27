@@ -12,8 +12,16 @@ import {
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-function RecipeList({ recipes, onRecipeClick, onToggleFavorite }) {
+function RecipeList({
+  recipes,
+  onRecipeClick,
+  onToggleFavorite,
+  onDeleteRecipe,
+  onEditRecipe,
+}) {
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredRecipes = recipes.filter((recipe) =>
@@ -44,17 +52,43 @@ function RecipeList({ recipes, onRecipeClick, onToggleFavorite }) {
               key={recipe.id}
               disablePadding
               secondaryAction={
-                <IconButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onToggleFavorite(recipe.id);
-                  }}
-                  edge="end"
-                  sx={{
-                    color: recipe.favorite ? "error.main" : "text.secondary",
-                  }}>
-                  {recipe.favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                </IconButton>
+                <Box>
+                  <IconButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onToggleFavorite(recipe.id);
+                    }}
+                    edge="end"
+                    sx={{
+                      color: recipe.favorite ? "error.main" : "text.secondary",
+                    }}>
+                    {recipe.favorite ? (
+                      <FavoriteIcon />
+                    ) : (
+                      <FavoriteBorderIcon />
+                    )}
+                  </IconButton>
+                  <IconButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onEditRecipe(recipe);
+                    }}>
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (
+                        window.confirm(
+                          "Are you sure you want to delete this recipe?"
+                        )
+                      ) {
+                        onDeleteRecipe(recipe.id);
+                      }
+                    }}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
               }
               sx={{
                 "&:hover": {

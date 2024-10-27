@@ -12,11 +12,31 @@ import {
   Box,
   useMediaQuery,
   useTheme,
+  IconButton,
 } from "@mui/material";
+import { Print as PrintIcon, Share as ShareIcon } from "@mui/icons-material";
 
 function RecipeDetails({ recipe, open, onClose }) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: recipe.name,
+          text: `Check out this recipe for ${recipe.name}!`,
+          url: window.location.href,
+        });
+      } catch (error) {
+        console.log("Error sharing:", error);
+      }
+    }
+  };
 
   if (!recipe) return null;
 
@@ -33,13 +53,23 @@ function RecipeDetails({ recipe, open, onClose }) {
           maxHeight: "90vh",
         },
       }}>
-      <DialogTitle>
+      <DialogTitle sx={{ pr: 8 }}>
         <Typography
           variant={isSmallScreen ? "h6" : "h5"}
           align="center"
           color="primary">
           {recipe.name}
         </Typography>
+        <Box sx={{ position: "absolute", right: 8, top: 8 }}>
+          {navigator.share && (
+            <IconButton onClick={handleShare} size="small" sx={{ mr: 1 }}>
+              <ShareIcon />
+            </IconButton>
+          )}
+          <IconButton onClick={handlePrint} size="small">
+            <PrintIcon />
+          </IconButton>
+        </Box>
       </DialogTitle>
       <DialogContent dividers>
         <Box sx={{ p: isSmallScreen ? 1 : 2 }}>
@@ -63,7 +93,12 @@ function RecipeDetails({ recipe, open, onClose }) {
           <List dense sx={{ ml: isSmallScreen ? -1 : 0 }}>
             {recipe.ingredients.map((ingredient, index) => (
               <ListItem key={index} sx={{ px: 0 }}>
-                <ListItemText primary={ingredient} />
+                <ListItemText
+                  primary={ingredient}
+                  primaryTypographyProps={{
+                    sx: { fontSize: isSmallScreen ? "0.875rem" : "1rem" },
+                  }}
+                />
               </ListItem>
             ))}
           </List>
@@ -84,6 +119,7 @@ function RecipeDetails({ recipe, open, onClose }) {
               mt: 1,
               lineHeight: 1.6,
               fontSize: isSmallScreen ? "0.875rem" : "1rem",
+              whiteSpace: "pre-line",
             }}>
             {recipe.instructions}
           </Typography>

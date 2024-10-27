@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Container,
   Typography,
@@ -8,6 +8,13 @@ import {
   Toolbar,
   ToggleButton,
   ToggleButtonGroup,
+  Snackbar,
+  Alert,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import RecipeList from "./components/RecipeList";
 import AddRecipeForm from "./components/AddRecipeForm";
@@ -47,13 +54,60 @@ const initialRecipes = [
 ];
 
 function App() {
-  const [recipes, setRecipes] = useState(initialRecipes);
+  const [recipes, setRecipes] = useState(() => {
+    const storedRecipes = localStorage.getItem("recipes");
+    return storedRecipes ? JSON.parse(storedRecipes) : initialRecipes;
+  });
   const [openAddForm, setOpenAddForm] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [filter, setFilter] = useState("all");
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [recipeToDelete, setRecipeToDelete] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem("recipes", JSON.stringify(recipes));
+  }, [recipes]);
 
   const handleAddRecipe = (newRecipe) => {
-    setRecipes([...recipes, newRecipe]);
+    const recipeWithId = {
+      ...newRecipe,
+      id: recipes.length ? Math.max(recipes.map((r) => r.id)) + 1 : 1,
+    };
+    setRecipes([...recipes, recipeWithId]);
+    setOpenAddForm(false);
+  };
+
+  const handleEditRecipe = (updatedRecipe) => {
+    setRecipes(
+      recipes.map((recipe) =>
+        recipe.id === updatedRecipe.id ? updatedRecipe : recipe
+      )
+    );
+    setSelectedRecipe(updatedRecipe);
+  };
+
+  const handleDeleteRecipe = (id) => {
+    setRecipeToDelete(recipes.find((recipe) => recipe.id === id));
+    setOpenDeleteDialog(true);
+  };
+
+  const confirmDeleteRecipe = () => {
+    if (recipeToDelete) {
+      setRecipes(recipes.filter((recipe) => recipe.id !== recipeToDelete.id));
+      setSnackbar({
+        open: true,
+        message: `${recipeToDelete.name} deleted successfully!`,
+        severity: "success",
+      });
+      setSelectedRecipe(null);
+      setRecipeToDelete(null);
+    }
+    setOpenDeleteDialog(false);
   };
 
   const handleToggleFavorite = (id) => {
@@ -98,6 +152,8 @@ function App() {
           recipes={filteredRecipes}
           onRecipeClick={setSelectedRecipe}
           onToggleFavorite={handleToggleFavorite}
+          onDeleteRecipe={handleDeleteRecipe}
+          onEditRecipe={handleEditRecipe}
         />
 
         <AddRecipeForm
@@ -111,6 +167,38 @@ function App() {
           open={!!selectedRecipe}
           onClose={() => setSelectedRecipe(null)}
         />
+
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={3000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}>
+          <Alert
+            severity={snackbar.severity}
+            onClose={() => setSnackbar({ ...snackbar, open: false })}>
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+
+        <Dialog
+          open={openDeleteDialog}
+          onClose={() => setOpenDeleteDialog(false)}>
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete{" "}
+              {recipeToDelete ? recipeToDelete.name : ""}? This action cannot be
+              undone.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenDeleteDialog(false)} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={confirmDeleteRecipe} color="secondary">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </Box>
   );
