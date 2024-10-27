@@ -23,7 +23,7 @@ import RecipeDetails from "./components/RecipeDetails";
 const initialRecipes = [
   {
     id: 1,
-    name: "Classic Spaghetti Carbonara",
+    name: "Spaghetti Carbonara",
     description: "A traditional Italian pasta dish",
     ingredients: [
       "spaghetti",
