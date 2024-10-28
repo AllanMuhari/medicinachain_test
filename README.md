@@ -43,8 +43,8 @@ This is a Recipe Book application built with **React** and **Material-UI (MUI)**
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/your-username/recipe-book-app.git
-   cd recipe-book-app
+   git clone https://github.com/AllanMuhari/medicinachain_test.git
+   cd medicinachain_test
    ```
 ## Install Dependencies
 
